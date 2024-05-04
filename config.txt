@@ -1,0 +1,5 @@
+Usuario = "htoledo@gs1pe.org.pe"
+Contrasena = "lima1234"
+NombreArchivo = f"GS1 INTRA {datetime.now().date()} 01"
+UbicacionArchivo = "C:/Users/lol/Desktop/WScraping/In/Correo-Info.csv"
+UbicacionDescargaArchivo = "C:/Users/lol/Desktop/WScraping/out"
