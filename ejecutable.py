@@ -1,3 +1,4 @@
+from csv import excel
 from selenium.webdriver import Chrome
 
 from selenium import webdriver
@@ -20,6 +21,8 @@ from datetime import datetime
 
 import os
 
+from pathlib import Path
+
 
 #Config
 with open("config.txt", "r") as archivo:
@@ -40,12 +43,16 @@ for linea in lineas:
     constantes[nombre] = eval(valor)
     
     
+
+# usar Path para que funcione en cualquier sistema
+ruta_archivo_subir =   f'{Path.cwd()}\In\{constantes["NombreArchivoSubir"]}'
+
 # ENV VAR
 USER = constantes["Usuario"]
 PASSWORD = constantes["Contrasena"]
 
 NAME_LIST = constantes["NombreArchivo"]
-PATH_FILE = constantes["UbicacionArchivo"]
+PATH_FILE =  ruta_archivo_subir
 
 DOWNLOAD_PATH = constantes["UbicacionDescargaArchivo"]
 
@@ -53,8 +60,13 @@ def main():
     service = Service(ChromeDriverManager().install())
     option = webdriver.ChromeOptions()
     option.add_argument("--window-size=1920,1080")
-    # option.add_argument("--headless")
-
+    option.add_argument("--headless")
+    option.add_experimental_option("prefs", {
+    "download.default_directory": f"{Path.cwd()}\out",
+    "download.prompt_for_download": False,  # Evitar la ventana de confirmación de descarga
+    "download.directory_upgrade": True,
+    "safebrowsing.enabled": True
+})
 
 # Init serv
     driver = Chrome(service=service, options=option)
@@ -160,49 +172,79 @@ def main():
     #Download csv
     table_dest = driver.find_element(By.XPATH, "/html/body/div[2]/div/ul[1]/li[2]/a").click()
     print("Descargando archivo csv...")
-    time.sleep(10)
+    time.sleep(5)
     
     # To close navigator
     driver.quit()
     
-    
-    
-def moveFile():
-    #Move downloaded file
-    path_file_downloaded = os.path.expanduser("~\Downloads")
-    
-    
-    
-    file_name = f"list_{NAME_LIST}__.xls"
-    
-    while True:
-        if file_name in os.listdir(path_file_downloaded):
-            break
-            print("...")
-        else:
-            print(file_name)
-            print(path_file_downloaded)
-            print(os.listdir(path_file_downloaded))
-            time.sleep(10)
-            
-    ruta_archivo = os.path.join(path_file_downloaded, file_name)
-    print(ruta_archivo)
-    ruta_destino =os.path.join(DOWNLOAD_PATH, file_name)
-    print(ruta_destino)
-    
-    if os.path.exists(ruta_archivo):
-        print("ruta download existe")
-    else:
-        print("download no existe")
-        
-    if os.path.exists(ruta_destino):
-        print("ruta download existe2")
-    else:
-        print("download no existe2")
-        
-    os.rename(ruta_archivo, ruta_destino)
 
+NAME_LIST = "list_GS1 INTRA 2024-07-11 01"
+def xlsToXlsx():
+    import win32com.client as client
+    
+    # file_path = f"{Path.cwd()}\out\{NAME_LIST}.xls"
+    file_path = f"{Path.cwd()}\out\{NAME_LIST}__.xls.crdownload"
+    excel = client.Dispatch("excel.application")
+    wb = excel.Workbooks.Open(file_path)
+    output_path = f"{Path.cwd()}/new/{NAME_LIST}"
+    wb.SaveAs(output_path, 51)
+    wb.Close()
+    excel.Quit()
 
+def dataToSQL():
+
+    import openpyxl
+
+    # Ruta del archivo xlsx
+    ruta_archivo_xlsx = f'./new/{NAME_LIST}.xlsx'
+
+    # Abrir el archivo xlsx
+    workbook = openpyxl.load_workbook(ruta_archivo_xlsx)
+    sheet = workbook.active
+
+    str_final = ""
+    # Iterar sobre las filas, ignorando la primera
+    for row in range(2, sheet.max_row + 1):
+        # Obtener los valores de la primera y tercera columna
+        valor_columna1 = sheet.cell(row=row, column=1).value
+        valor_columna3 = sheet.cell(row=row, column=3).value
+        
+        str_final+=(f"{valor_columna1}¦{valor_columna3}¬")
+        # Imprimir los valores
+        
+    str_to_sql = str_final[:-1]
+    print("Genero exitosamente nuevo archivo")
+    return str_to_sql
+    
+    
+def dataBaseCon(str_to_sql):
+    import pyodbc
+    
+    server = '161.97.153.222\DEV,40705'
+    database = 'DBEAN'
+    username = 'us_ext_db'
+    password = '@#Us204-@3'
+    
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+    cursor = conn.cursor()
+
+    data = str_to_sql
+    # Ejecutar el procedimiento almacenado
+    procedure_name = 'dbo.CSV_ESTADO_CORREO_EDUCACION_UPDATE_SP'
+    params = (data)  # Parámetros del procedimiento almacenado
+
+    try:
+        cursor.callproc(procedure_name, params)
+        conn.commit()
+        print("Procedimiento almacenado ejecutado correctamente.")
+    except pyodbc.Error as e:
+        print(f"Error al ejecutar el procedimiento almacenado: {e}")
+
+    # Cerrar la conexión
+    cursor.close()
+    conn.close()   
+    
 if __name__ == '__main__':
-    main()
-    moveFile()
+    # main()
+    xlsToXlsx()
+    dataBaseCon(dataToSQL())
