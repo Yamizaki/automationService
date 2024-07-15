@@ -54,7 +54,6 @@ PASSWORD = constantes["Contrasena"]
 NAME_LIST = constantes["NombreArchivo"]
 PATH_FILE =  ruta_archivo_subir
 
-DOWNLOAD_PATH = constantes["UbicacionDescargaArchivo"]
 
 def main():
     service = Service(ChromeDriverManager().install())
@@ -178,12 +177,10 @@ def main():
     driver.quit()
     
 
-NAME_LIST = "list_GS1 INTRA 2024-07-11 01"
 def xlsToXlsx():
     import win32com.client as client
     
-    # file_path = f"{Path.cwd()}\out\{NAME_LIST}.xls"
-    file_path = f"{Path.cwd()}\out\{NAME_LIST}__.xls.crdownload"
+    file_path = f"{Path.cwd()}\out\list_{NAME_LIST}__.xls.crdownload"
     excel = client.Dispatch("excel.application")
     wb = excel.Workbooks.Open(file_path)
     output_path = f"{Path.cwd()}/new/{NAME_LIST}"
@@ -218,33 +215,33 @@ def dataToSQL():
     
     
 def dataBaseCon(str_to_sql):
-    import pyodbc
+        import pyodbc
     
-    server = '161.97.153.222\DEV,40705'
-    database = 'DBEAN'
-    username = 'us_ext_db'
-    password = '@#Us204-@3'
+        server = '161.97.153.222\DEV,40705'
+        database = 'DBEAN'
+        username = 'us_ext_db'
+        password = '@#Us204-@3'
+        
+        conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+        cursor = conn.cursor()
+
+        data = str_to_sql
+        # Ejecutar el procedimiento almacenado
+        procedure_name = 'dbo.CSV_ESTADO_CORREO_EDUCACION_UPDATE_SP'
+        
+        try:
+            cursor.execute('EXEC ' + procedure_name + ' @lstParametros = ?', data)
+            conn.commit()
+            print("Procedimiento almacenado ejecutado correctamente.")
+        except pyodbc.Error as e:
+            print(f"Error al ejecutar el procedimiento almacenado: {e}")
+
+        # Cerrar la conexión
+        cursor.close()
+        conn.close() 
     
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-    cursor = conn.cursor()
-
-    data = str_to_sql
-    # Ejecutar el procedimiento almacenado
-    procedure_name = 'dbo.CSV_ESTADO_CORREO_EDUCACION_UPDATE_SP'
-    params = (data)  # Parámetros del procedimiento almacenado
-
-    try:
-        cursor.callproc(procedure_name, params)
-        conn.commit()
-        print("Procedimiento almacenado ejecutado correctamente.")
-    except pyodbc.Error as e:
-        print(f"Error al ejecutar el procedimiento almacenado: {e}")
-
-    # Cerrar la conexión
-    cursor.close()
-    conn.close()   
     
 if __name__ == '__main__':
-    # main()
+    main()
     xlsToXlsx()
     dataBaseCon(dataToSQL())
