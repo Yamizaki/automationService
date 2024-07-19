@@ -181,12 +181,23 @@ def xlsToXlsx():
     import win32com.client as client
     
     file_path = f"{Path.cwd()}\out\list_{NAME_LIST}__.xls.crdownload"
-    excel = client.Dispatch("excel.application")
-    wb = excel.Workbooks.Open(file_path)
-    output_path = f"{Path.cwd()}/new/{NAME_LIST}"
-    wb.SaveAs(output_path, 51)
-    wb.Close()
-    excel.Quit()
+    try:
+                excel = client.Dispatch("excel.application")
+                wb = excel.Workbooks.Open(file_path)
+                output_path = f"{Path.cwd()}/new/{NAME_LIST}"
+                wb.SaveAs(output_path, 51)
+                wb.Close()
+                excel.Quit()
+    except:
+                file_path = f"{Path.cwd()}\out\list_{NAME_LIST}__.xls"
+                excel = client.Dispatch("excel.application")
+                wb = excel.Workbooks.Open(file_path)
+                output_path = f"{Path.cwd()}/new/{NAME_LIST}"
+                wb.SaveAs(output_path, 51)
+                wb.Close()
+                excel.Quit()
+
+            
 
 def dataToSQL():
 
