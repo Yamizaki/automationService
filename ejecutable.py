@@ -50,11 +50,16 @@ PASSWORD = constantes["Contrasena"]
 NAME_LIST = constantes["NombreArchivo"]
 PATH_FILE = ruta_archivo_subir
 
+server_sql = constantes["server"]
+database_sql = constantes["database"]
+username_sql = constantes["username"]
+password_sql = constantes["password"]
+
 
 def main():
     service = Service(ChromeDriverManager().install())
     option = webdriver.ChromeOptions()
-    # option.add_argument("--window-size=1920,1080")
+    option.add_argument("--window-size=1920,1080")
     option.add_argument("--headless")
     option.add_experimental_option(
         "prefs",
@@ -231,10 +236,10 @@ def dataToSQL():
 def dataBaseCon(str_to_sql):
     import pyodbc
 
-    server = "161.97.153.222\DEV,40705"
-    database = "DBEAN"
-    username = "us_ext_db"
-    password = "@#Us204-@3"
+    server = server_sql
+    database = database_sql
+    username = username_sql
+    password = password_sql
 
     conn = pyodbc.connect(
         "DRIVER={SQL Server};SERVER="
