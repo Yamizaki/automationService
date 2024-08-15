@@ -20,6 +20,7 @@ from datetime import datetime
 
 from pathlib import Path
 
+import os
 
 # Config
 with open("config.txt", "r") as archivo:
@@ -57,7 +58,13 @@ password_sql = constantes["password"]
 
 
 def main():
-    service = Service(ChromeDriverManager().install())
+    from selenium.webdriver.chrome.service import Service as ChromeService
+
+    chrome_install = ChromeDriverManager().install()
+    folder = os.path.dirname(chrome_install)
+    chromedriver_path = os.path.join(folder, "chromedriver.exe")
+    service = ChromeService(chromedriver_path)
+
     option = webdriver.ChromeOptions()
     option.add_argument("--window-size=1920,1080")
     option.add_argument("--headless")
