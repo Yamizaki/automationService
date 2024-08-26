@@ -156,35 +156,37 @@ def main():
     menu_list = driver.find_element(By.XPATH, "//*[@id='slide-out']/li[2]/a").click()
     time.sleep(1)
 
-    # Procces to download csv file
-    condition = True
+ 
+        
+    def buscar_columna(i):
+        fila = driver.find_element(By.XPATH, f"/html/body/div[2]/div/table/tbody/tr[{i+1}]/td[1]/a")
 
-    while condition:
+        print("Buscando documento...")
+        
+        if fila.text == NAME_LIST:
+            print("Documento encontrado")
+            celda = driver.find_element(By.XPATH, f"/html/body/div[2]/div/table/tbody/tr[{i+1}]/td[3]/a")
+            
 
-        table_dest = driver.find_element(
-            By.XPATH, "/html/body/div[2]/div/table/tbody/tr[1]/td[3]/a"
-        )
-        texto = table_dest.text
-        txt_split = texto.split()
-        print("Esperando se actualice los destinatarios...")
-
-        if "0" not in txt_split:
-            condition = False
-            table_dest.click()
-            print("Destinatarios Listo...")
-            time.sleep(5)
+            if celda.text != "0 destinatarios":
+                print("destinarios listos")
+                celda.click()
+                time.sleep(3)
+                
+            else:               
+                print("Esperando se actualice los destinatarios...")
+                time.sleep(30)
+                driver.refresh()
+                buscar_columna(0)
         else:
-            time.sleep(30)
-
-            # Menu Acc
-            menu = driver.find_element(By.XPATH, "//*[@id='sidenav']/i").click()
-            time.sleep(1)
-
-            # Acces to list
-            menu_list = driver.find_element(
-                By.XPATH, "//*[@id='slide-out']/li[2]/a"
-            ).click()
-            time.sleep(1)
+            i+=1
+            buscar_columna(i)
+    buscar_columna(0)
+                
+        
+       
+                
+            
 
     # Download csv
     table_dest = driver.find_element(
@@ -197,34 +199,30 @@ def main():
     driver.quit()
 
 
-def xlsToXlsx():
-    import win32com.client as client
 
-    file_path = f"{Path.cwd()}\out\list_{NAME_LIST}__.xls.crdownload"
-    try:
-        excel = client.Dispatch("excel.application")
-        wb = excel.Workbooks.Open(file_path)
-        output_path = f"{Path.cwd()}/new/{NAME_LIST}"
-        wb.SaveAs(output_path, 51)
-        wb.Close()
-        excel.Quit()
-    except:
-        file_path = f"{Path.cwd()}\out\list_{NAME_LIST}__.xls"
-        excel = client.Dispatch("excel.application")
-        wb = excel.Workbooks.Open(file_path)
-        output_path = f"{Path.cwd()}/new/{NAME_LIST}"
-        wb.SaveAs(output_path, 51)
-        wb.Close()
-        excel.Quit()
 
 
 def dataToSQL():
 
     import pandas as pd
+    
+    try:
+        file_path = f"{Path.cwd()}\out\list_{NAME_LIST}__.xls.crdownload"
+        time.sleep(2)
+        output_path = f"{Path.cwd()}/out/{NAME_LIST}.txt"
 
+        os.rename(file_path, output_path)
+    except:
+        file_path = f"{Path.cwd()}\out\list_{NAME_LIST}__.xls"
+        time.sleep(2)
+        output_path = f"{Path.cwd()}/out/{NAME_LIST}.txt"
+
+        os.rename(file_path, output_path)
+    
+    time.sleep(2)
     # Cargar el archivo Excel
-    ruta_excel = f"{Path.cwd()}/new/{NAME_LIST}.xlsx"
-    df = pd.read_excel(ruta_excel)
+    ruta_excel = f"{Path.cwd()}/out/{NAME_LIST}.txt"
+    df = pd.read_csv(ruta_excel, sep='\t', encoding='ISO-8859-1')
 
     # Obtener las columnas 1 y 3
     # En pandas, las columnas están indexadas desde 0, así que 1 y 3 son 0 y 2 respectivamente
@@ -277,6 +275,27 @@ def dataBaseCon(str_to_sql):
 
 
 if __name__ == "__main__":
-    main()
-    xlsToXlsx()
-    dataBaseCon(dataToSQL())
+    try:
+        main()
+        dataBaseCon(dataToSQL())
+        
+    except Exception as e:
+        # Definir el nombre del archivo
+        nombre_archivo = f"error{NAME_LIST}.txt"
+        carpeta = "errors-log"
+        ruta_completa = os.path.join(carpeta, nombre_archivo)
+        
+        # Crear la carpeta si no existe
+        if not os.path.exists(carpeta):
+            os.makedirs(carpeta)
+
+        # Abrir el archivo en modo escritura (esto creará el archivo si no existe)
+        with open(ruta_completa, "w") as archivo:
+            # Escribir texto en el archivo
+            archivo.write(f"{e}\n")
+            archivo.close()
+        # El archivo se cierra automáticamente cuando sales del bloque 'with'
+        print("error")
+
+
+
