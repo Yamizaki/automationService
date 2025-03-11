@@ -1,0 +1,218 @@
+[
+    {
+        "label": "Chrome",
+        "importPath": "selenium.webdriver",
+        "description": "selenium.webdriver",
+        "isExtraImport": true,
+        "detail": "selenium.webdriver",
+        "documentation": {}
+    },
+    {
+        "label": "webdriver",
+        "importPath": "selenium",
+        "description": "selenium",
+        "isExtraImport": true,
+        "detail": "selenium",
+        "documentation": {}
+    },
+    {
+        "label": "ChromeDriverManager",
+        "importPath": "webdriver_manager.chrome",
+        "description": "webdriver_manager.chrome",
+        "isExtraImport": true,
+        "detail": "webdriver_manager.chrome",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "By",
+        "importPath": "selenium.webdriver.common.by",
+        "description": "selenium.webdriver.common.by",
+        "isExtraImport": true,
+        "detail": "selenium.webdriver.common.by",
+        "documentation": {}
+    },
+    {
+        "label": "Keys",
+        "importPath": "selenium.webdriver.common.keys",
+        "description": "selenium.webdriver.common.keys",
+        "isExtraImport": true,
+        "detail": "selenium.webdriver.common.keys",
+        "documentation": {}
+    },
+    {
+        "label": "WebDriverWait",
+        "importPath": "selenium.webdriver.support.ui",
+        "description": "selenium.webdriver.support.ui",
+        "isExtraImport": true,
+        "detail": "selenium.webdriver.support.ui",
+        "documentation": {}
+    },
+    {
+        "label": "expected_conditions",
+        "importPath": "selenium.webdriver.support",
+        "description": "selenium.webdriver.support",
+        "isExtraImport": true,
+        "detail": "selenium.webdriver.support",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "def main():\n    from selenium.webdriver.chrome.service import Service as ChromeService\n    chrome_install = ChromeDriverManager().install()\n    folder = os.path.dirname(chrome_install)\n    chromedriver_path = os.path.join(folder, \"chromedriver.exe\")\n    service = ChromeService(chromedriver_path)\n    option = webdriver.ChromeOptions()\n    option.add_argument(\"--window-size=1920,1080\")\n    # option.add_argument(\"--headless\")\n    option.add_experimental_option(",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "dataToSQL",
+        "kind": 2,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "def dataToSQL():\n    import pandas as pd\n    try:\n        file_path = f\"{Path.cwd()}\\out\\list_{NAME_LIST}__.xls.crdownload\"\n        time.sleep(2)\n        output_path = f\"{Path.cwd()}/out/{NAME_LIST}.txt\"\n        os.rename(file_path, output_path)\n    except:\n        file_path = f\"{Path.cwd()}\\out\\list_{NAME_LIST}__.xls\"\n        time.sleep(2)",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "dataBaseCon",
+        "kind": 2,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "def dataBaseCon(str_to_sql):\n    import pyodbc\n    server = server_sql\n    database = database_sql\n    username = username_sql\n    password = password_sql\n    conn = pyodbc.connect(\n        \"DRIVER={SQL Server};SERVER=\"\n        + server\n        + \";DATABASE=\"",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "constantes",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "constantes = {}\n# Itera sobre las líneas del archivo\nfor linea in lineas:\n    # Divide cada línea en nombre de la constante y su valor\n    nombre, valor = linea.strip().split(\"=\")\n    # Elimina espacios en blanco alrededor del nombre y del valor\n    nombre = nombre.strip()\n    valor = valor.strip()\n    # Almacena la constante en el diccionario\n    constantes[nombre] = eval(valor)",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "ruta_archivo_subir",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "ruta_archivo_subir = f'{Path.cwd()}\\In\\{constantes[\"NombreArchivoSubir\"]}'\n# ENV VAR\nUSER = constantes[\"Usuario\"]\nPASSWORD = constantes[\"Contrasena\"]\nNAME_LIST = constantes[\"NombreArchivo\"]\nPATH_FILE = ruta_archivo_subir\nPATH_DOWNLOAD = f\"{Path.cwd()}\\Out\"\nserver_sql = constantes[\"server\"]\ndatabase_sql = constantes[\"database\"]\nusername_sql = constantes[\"username\"]",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "USER",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "USER = constantes[\"Usuario\"]\nPASSWORD = constantes[\"Contrasena\"]\nNAME_LIST = constantes[\"NombreArchivo\"]\nPATH_FILE = ruta_archivo_subir\nPATH_DOWNLOAD = f\"{Path.cwd()}\\Out\"\nserver_sql = constantes[\"server\"]\ndatabase_sql = constantes[\"database\"]\nusername_sql = constantes[\"username\"]\npassword_sql = constantes[\"password\"]\ndef main():",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "PASSWORD",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "PASSWORD = constantes[\"Contrasena\"]\nNAME_LIST = constantes[\"NombreArchivo\"]\nPATH_FILE = ruta_archivo_subir\nPATH_DOWNLOAD = f\"{Path.cwd()}\\Out\"\nserver_sql = constantes[\"server\"]\ndatabase_sql = constantes[\"database\"]\nusername_sql = constantes[\"username\"]\npassword_sql = constantes[\"password\"]\ndef main():\n    from selenium.webdriver.chrome.service import Service as ChromeService",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "NAME_LIST",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "NAME_LIST = constantes[\"NombreArchivo\"]\nPATH_FILE = ruta_archivo_subir\nPATH_DOWNLOAD = f\"{Path.cwd()}\\Out\"\nserver_sql = constantes[\"server\"]\ndatabase_sql = constantes[\"database\"]\nusername_sql = constantes[\"username\"]\npassword_sql = constantes[\"password\"]\ndef main():\n    from selenium.webdriver.chrome.service import Service as ChromeService\n    chrome_install = ChromeDriverManager().install()",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "PATH_FILE",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "PATH_FILE = ruta_archivo_subir\nPATH_DOWNLOAD = f\"{Path.cwd()}\\Out\"\nserver_sql = constantes[\"server\"]\ndatabase_sql = constantes[\"database\"]\nusername_sql = constantes[\"username\"]\npassword_sql = constantes[\"password\"]\ndef main():\n    from selenium.webdriver.chrome.service import Service as ChromeService\n    chrome_install = ChromeDriverManager().install()\n    folder = os.path.dirname(chrome_install)",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "PATH_DOWNLOAD",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "PATH_DOWNLOAD = f\"{Path.cwd()}\\Out\"\nserver_sql = constantes[\"server\"]\ndatabase_sql = constantes[\"database\"]\nusername_sql = constantes[\"username\"]\npassword_sql = constantes[\"password\"]\ndef main():\n    from selenium.webdriver.chrome.service import Service as ChromeService\n    chrome_install = ChromeDriverManager().install()\n    folder = os.path.dirname(chrome_install)\n    chromedriver_path = os.path.join(folder, \"chromedriver.exe\")",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "server_sql",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "server_sql = constantes[\"server\"]\ndatabase_sql = constantes[\"database\"]\nusername_sql = constantes[\"username\"]\npassword_sql = constantes[\"password\"]\ndef main():\n    from selenium.webdriver.chrome.service import Service as ChromeService\n    chrome_install = ChromeDriverManager().install()\n    folder = os.path.dirname(chrome_install)\n    chromedriver_path = os.path.join(folder, \"chromedriver.exe\")\n    service = ChromeService(chromedriver_path)",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "database_sql",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "database_sql = constantes[\"database\"]\nusername_sql = constantes[\"username\"]\npassword_sql = constantes[\"password\"]\ndef main():\n    from selenium.webdriver.chrome.service import Service as ChromeService\n    chrome_install = ChromeDriverManager().install()\n    folder = os.path.dirname(chrome_install)\n    chromedriver_path = os.path.join(folder, \"chromedriver.exe\")\n    service = ChromeService(chromedriver_path)\n    option = webdriver.ChromeOptions()",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "username_sql",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "username_sql = constantes[\"username\"]\npassword_sql = constantes[\"password\"]\ndef main():\n    from selenium.webdriver.chrome.service import Service as ChromeService\n    chrome_install = ChromeDriverManager().install()\n    folder = os.path.dirname(chrome_install)\n    chromedriver_path = os.path.join(folder, \"chromedriver.exe\")\n    service = ChromeService(chromedriver_path)\n    option = webdriver.ChromeOptions()\n    option.add_argument(\"--window-size=1920,1080\")",
+        "detail": "ejecutable",
+        "documentation": {}
+    },
+    {
+        "label": "password_sql",
+        "kind": 5,
+        "importPath": "ejecutable",
+        "description": "ejecutable",
+        "peekOfCode": "password_sql = constantes[\"password\"]\ndef main():\n    from selenium.webdriver.chrome.service import Service as ChromeService\n    chrome_install = ChromeDriverManager().install()\n    folder = os.path.dirname(chrome_install)\n    chromedriver_path = os.path.join(folder, \"chromedriver.exe\")\n    service = ChromeService(chromedriver_path)\n    option = webdriver.ChromeOptions()\n    option.add_argument(\"--window-size=1920,1080\")\n    # option.add_argument(\"--headless\")",
+        "detail": "ejecutable",
+        "documentation": {}
+    }
+]
